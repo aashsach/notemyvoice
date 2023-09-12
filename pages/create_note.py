@@ -1,10 +1,8 @@
 import streamlit as st
 import hashlib
 from audio_recorder_streamlit import audio_recorder
-from utils.utils import get_assembly_ai_transcriber, get_weaviate_client
+from utils import get_assembly_ai_transcriber, get_weaviate_client
 from tempfile import NamedTemporaryFile
-
-st.set_page_config(page_title="VoiceMyNote", page_icon="🗒️", initial_sidebar_state="collapsed")
 
 wv_client = get_weaviate_client()
 transcriber = get_assembly_ai_transcriber()

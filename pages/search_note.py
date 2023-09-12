@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.utils import  get_weaviate_client
+from utils import  get_weaviate_client
 
 wv_client = get_weaviate_client()
 
