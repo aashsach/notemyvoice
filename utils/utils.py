@@ -1,7 +1,8 @@
 import streamlit as st
 import assemblyai as aai
 import weaviate
-from weaviate.embedded import EmbeddedOptions
+
+auth_config = weaviate.AuthApiKey(api_key=st.secrets.weaviate.api_key)
 
 
 @st.cache_resource
@@ -13,7 +14,8 @@ def get_assembly_ai_transcriber():
 @st.cache_resource
 def get_weaviate_client():
     wv_client = weaviate.Client(
-        embedded_options=EmbeddedOptions(),
+        url=st.secrets.weaviate.url,
+        auth_client_secret=auth_config,
         additional_headers={
             "X-OpenAI-Api-Key": st.secrets.openai.api_key
         }

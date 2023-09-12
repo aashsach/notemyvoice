@@ -2,7 +2,7 @@ import streamlit as st
 import hashlib
 from audio_recorder_streamlit import audio_recorder
 from utils.utils import get_assembly_ai_transcriber, get_weaviate_client
-from constants import AUDIO_FILE_PATH
+from tempfile import NamedTemporaryFile
 
 st.set_page_config(page_title="VoiceMyNote", page_icon="🗒️", initial_sidebar_state="collapsed")
 
@@ -39,31 +39,27 @@ else:
 
 if audio_bytes:
     audio_hash = hashlib.sha256(audio_bytes).hexdigest()
-    audio_path = AUDIO_FILE_PATH / f"{audio_hash}.wav"
-    transcript_path = AUDIO_FILE_PATH / f"{audio_hash}_transcript.txt"
 
     if existing_hash := st.session_state.get("audio_hash", None) != audio_hash:
         st.session_state["audio_hash"] = audio_hash
 
-        with open(audio_path, "wb") as f:
-            f.write(audio_bytes)
+        with NamedTemporaryFile("w+b", suffix=audio_hash) as audio_file:
+            audio_file.write(audio_bytes)
 
-        with st.spinner("transcribing..."):
-            transcript = transcriber.transcribe(str(audio_path))
-            st.session_state["audio_transcript"] = transcript.text
-            with open(transcript_path, "w") as f:
-                f.write(transcript.text)
+            with st.spinner("transcribing..."):
+                transcript = transcriber.transcribe(str(audio_file.name))
+                st.session_state["audio_transcript"] = transcript.text
 
-    st.audio(str(audio_path), format="audio/wav")
-    st.write(st.session_state.audio_transcript, "")
+    st.audio(audio_bytes, format="audio/wav")
 
 text_note = st.text_area("Edit Transcribed Note or Write your own!",
                          value=st.session_state.audio_transcript).strip()
 
 if text_note and st.button("save note"):
-    st.write(text_note)
-    wv_client.data_object.create(data_object={
-        "note": text_note,
-    },
-        class_name="VoiceNote"
-    )
+    st.write(f"Storing thought to DB: {text_note}")
+    with st.spinner("indexing..."):
+        wv_client.data_object.create(data_object={
+            "note": text_note,
+        },
+            class_name="VoiceNote"
+        )
