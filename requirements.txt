@@ -4,6 +4,12 @@
 #
 #    pip-compile
 #
+aiohttp==3.8.5
+    # via
+    #   langchain
+    #   openai
+aiosignal==1.3.1
+    # via aiohttp
 altair==5.1.1
     # via streamlit
 annotated-types==0.5.0
@@ -12,8 +18,13 @@ anyio==4.0.0
     # via httpcore
 assemblyai==0.17.0
     # via -r requirements.in
+async-timeout==4.0.3
+    # via
+    #   aiohttp
+    #   langchain
 attrs==23.1.0
     # via
+    #   aiohttp
     #   jsonschema
     #   referencing
 audio-recorder-streamlit==0.0.8
@@ -32,58 +43,101 @@ certifi==2023.7.22
 cffi==1.15.1
     # via cryptography
 charset-normalizer==3.2.0
-    # via requests
+    # via
+    #   aiohttp
+    #   requests
 click==8.1.7
     # via streamlit
 cryptography==41.0.3
     # via authlib
+dataclasses-json==0.5.14
+    # via
+    #   langchain
+    #   llama-index
 exceptiongroup==1.1.3
     # via anyio
+frozenlist==1.4.0
+    # via
+    #   aiohttp
+    #   aiosignal
 gitdb==4.0.10
     # via gitpython
-gitpython==3.1.35
+gitpython==3.1.36
     # via streamlit
 h11==0.14.0
     # via httpcore
-httpcore==0.17.3
+hiyapyco==0.5.1
+    # via -r requirements.in
+httpcore==0.18.0
     # via httpx
-httpx==0.24.1
+httpx==0.25.0
     # via assemblyai
 idna==3.4
     # via
     #   anyio
     #   httpx
     #   requests
+    #   yarl
 importlib-metadata==6.8.0
     # via streamlit
 jinja2==3.1.2
     # via
     #   altair
+    #   hiyapyco
     #   pydeck
 jsonschema==4.19.0
     # via altair
 jsonschema-specifications==2023.7.1
     # via jsonschema
+langchain==0.0.287
+    # via
+    #   -r requirements.in
+    #   llama-index
+langsmith==0.0.36
+    # via
+    #   -r requirements.in
+    #   langchain
+llama-index==0.6.0
+    # via -r requirements.in
 markdown-it-py==3.0.0
     # via rich
 markupsafe==2.1.3
-    # via jinja2
+    # via
+    #   hiyapyco
+    #   jinja2
+marshmallow==3.20.1
+    # via dataclasses-json
 mdurl==0.1.2
     # via markdown-it-py
+multidict==6.0.4
+    # via
+    #   aiohttp
+    #   yarl
+mypy-extensions==1.0.0
+    # via typing-inspect
+numexpr==2.8.6
+    # via langchain
 numpy==1.25.2
     # via
     #   altair
+    #   langchain
+    #   llama-index
+    #   numexpr
     #   pandas
     #   pyarrow
     #   pydeck
     #   streamlit
+openai==0.28.0
+    # via llama-index
 packaging==23.1
     # via
     #   altair
+    #   marshmallow
     #   streamlit
 pandas==2.1.0
     # via
     #   altair
+    #   llama-index
     #   streamlit
 pillow==9.5.0
     # via streamlit
@@ -94,9 +148,16 @@ pyarrow==13.0.0
 pycparser==2.21
     # via cffi
 pydantic==2.3.0
-    # via assemblyai
+    # via
+    #   -r requirements.in
+    #   assemblyai
+    #   langchain
+    #   langsmith
+    #   pydantic-settings
 pydantic-core==2.6.3
     # via pydantic
+pydantic-settings==2.0.3
+    # via -r requirements.in
 pydeck==0.8.0
     # via streamlit
 pygments==2.16.1
@@ -107,17 +168,29 @@ python-dateutil==2.8.2
     # via
     #   pandas
     #   streamlit
+python-dotenv==1.0.0
+    # via pydantic-settings
 pytz==2023.3.post1
     # via pandas
 pytz-deprecation-shim==0.1.0.post0
     # via tzlocal
+pyyaml==6.0.1
+    # via
+    #   hiyapyco
+    #   langchain
 referencing==0.30.2
     # via
     #   jsonschema
     #   jsonschema-specifications
+regex==2023.8.8
+    # via tiktoken
 requests==2.31.0
     # via
+    #   langchain
+    #   langsmith
+    #   openai
     #   streamlit
+    #   tiktoken
     #   weaviate-client
 rich==13.5.2
     # via streamlit
@@ -134,12 +207,22 @@ sniffio==1.3.0
     #   anyio
     #   httpcore
     #   httpx
+sqlalchemy==2.0.20
+    # via langchain
 streamlit==1.26.0
     # via
     #   -r requirements.in
     #   audio-recorder-streamlit
+    #   streamlit-elements
+streamlit-elements==0.1.0
+    # via -r requirements.in
 tenacity==8.2.3
-    # via streamlit
+    # via
+    #   langchain
+    #   llama-index
+    #   streamlit
+tiktoken==0.5.1
+    # via llama-index
 toml==0.10.2
     # via streamlit
 toolz==0.12.0
@@ -147,14 +230,18 @@ toolz==0.12.0
 tornado==6.3.3
     # via streamlit
 tqdm==4.66.1
-    # via weaviate-client
+    # via openai
 typing-extensions==4.7.1
     # via
     #   altair
     #   assemblyai
     #   pydantic
     #   pydantic-core
+    #   sqlalchemy
     #   streamlit
+    #   typing-inspect
+typing-inspect==0.9.0
+    # via dataclasses-json
 tzdata==2023.3
     # via
     #   pandas
@@ -163,15 +250,17 @@ tzlocal==4.3.1
     # via streamlit
 urllib3==2.0.4
     # via requests
-validators==0.21.0
+validators==0.22.0
     # via
     #   streamlit
     #   weaviate-client
 watchdog==3.0.0
     # via -r requirements.in
-weaviate-client==3.23.2
+weaviate-client==3.24.1
     # via -r requirements.in
 websockets==11.0.3
     # via assemblyai
+yarl==1.9.2
+    # via aiohttp
 zipp==3.16.2
     # via importlib-metadata
