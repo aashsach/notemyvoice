@@ -161,4 +161,5 @@ cython_debug/
 .idea/
 audio_files/
 .streamlit/secrets.toml
+notebooks
 

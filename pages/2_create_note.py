@@ -3,11 +3,16 @@ init_app()
 import streamlit as st
 import hashlib
 from audio_recorder_streamlit import audio_recorder
-from utils import get_assembly_ai_transcriber, get_weaviate_client, get_unsplash_image_with_keyword, get_keywords_to_search, get_title_of_note
+from utils import get_assembly_ai_transcriber, get_weaviate_client, get_unsplash_image_with_keyword, \
+    get_keywords_to_search, get_title_of_note, get_llama_weaviate_vector_store
 from tempfile import NamedTemporaryFile
-from streamlit_elements import elements, sync, event, mui
+from streamlit_elements import elements, mui
+from llama_index import Document
+
 
 wv_client = get_weaviate_client()
+llama_vector_store = get_llama_weaviate_vector_store()
+
 transcriber = get_assembly_ai_transcriber()
 
 if "audio_hash" not in st.session_state:
@@ -57,9 +62,12 @@ text_note = st.text_area("Edit Transcribed Note or Write your own!",
                          value=st.session_state.audio_transcript).strip()
 
 if text_note and st.button("save note"):
-    title = get_title_of_note(text_note)
-    keyword = get_keywords_to_search(text_note)
-    image = get_unsplash_image_with_keyword(keyword)
+    with st.spinner("setting title"):
+        # title = get_title_of_note(text_note)
+        title = get_keywords_to_search(text_note)
+    with st.spinner("finding thumbnail"):
+        keyword = title
+        image = get_unsplash_image_with_keyword(keyword)
     with elements("my_elements"):
         with mui.Card(key="key",
                       sx={"display": "flex", "flexDirection": "column", "borderRadius": 3, "overflow": "hidden"},
@@ -76,6 +84,7 @@ if text_note and st.button("save note"):
                 mui.Typography(text_note)
 
     with st.spinner("indexing..."):
+        llama_vector_store.insert(Document(text=text_note))
         wv_client.data_object.create(data_object={
             "title": title,
             "image": image,
@@ -83,3 +92,4 @@ if text_note and st.button("save note"):
         },
             class_name=st.secrets.weaviate.index_class,
         )
+        st.success("successfully indexed")
