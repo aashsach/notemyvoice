@@ -21,8 +21,6 @@ if "audio_hash" not in st.session_state:
 if "audio_transcript" not in st.session_state:
     st.session_state["audio_transcript"] = ""
 
-st.title("VoiceMyNote 🗣️🗒️")
-
 a, b = st.columns([2, 4])
 
 with a:

@@ -5,6 +5,8 @@ from types import SimpleNamespace
 def init_app():
     st.set_page_config(page_title="VoiceMyNote", page_icon="🗒️")
 
+    st.title("VoiceMyNote 🗣️🗒️")
+
     if "api_keys" not in st.session_state:
         st.session_state["api_keys"] = SimpleNamespace(
             openai_api_key="",
@@ -14,7 +16,7 @@ def init_app():
             unsplash_access_key=""
         )
 
-    with st.expander("api key configuration"):
+    with st.expander("api key configuration", expanded=True):
         openai_api_key = st.text_input("OpenAI key", type="password",
                                        value=st.session_state.api_keys.openai_api_key)
         assemblyai_api_key = st.text_input("AssemblyAI key", type="password",
